@@ -1,0 +1,35 @@
+@page
+@model AppRazor.Pages.SeedModel
+
+@{
+    ViewData["Title"] = "Seed";
+}
+
+<div class="container px-4 py-4" id="seed">
+    <h2 class="pb-2 border-bottom">
+        Seed music groups
+    </h2>
+    <p>
+        Current database contains {@Model.AmountOfFriends} friends.
+    </p>
+    <p>
+        Enter how many new friends you want to seed.
+    </p>
+    <div class="row row-cols-1 row-cols-lg-4 align-items-stretch g-4 py-5">
+        <div class="col-md-7 col-lg-8">
+            <form class="needs-validation" method="post" novalidate>
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <label asp-for="NrOfItems" class="form-label"> Number of items
+                        </label>
+                        <input asp-for="NrOfItems" class="form-control" />
+                        <span asp-validation-for="NrOfItems" class="text-danger">
+                        </span>
+                    </div>
+                </div>
+                <button class="w-100 btn btn-primary btn-lg my-4" type="submit"> Seed
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

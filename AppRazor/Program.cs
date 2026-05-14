@@ -1,27 +1,46 @@
-using AppRazor.Components;
+using AppRazor.Pages;
+using Configuration.Extensions;
+using DbContext.Extensions;
+using DbRepos;
+using Encryption.Extensions;
+using Services;
+using Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+// Add services
+builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+
+builder.Configuration.AddSecrets(builder.Environment);
+
+builder.Services.AddEncryptions(builder.Configuration);
+builder.Services.AddDatabaseConnections(builder.Configuration);
+builder.Services.AddUserBasedDbContext();
+
+builder.Services.AddVersionInfo();
+builder.Services.AddEnvironmentInfo();
+
+builder.Services.AddScoped<AdminDbRepos>();
+
+builder.Services.AddScoped<IAdminService, AdminServiceDb>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
-app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
+
 app.UseHttpsRedirection();
 
-app.UseAntiforgery();
-
 app.MapStaticAssets();
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.MapRazorPages()
+   .WithStaticAssets();
 
 app.Run();
