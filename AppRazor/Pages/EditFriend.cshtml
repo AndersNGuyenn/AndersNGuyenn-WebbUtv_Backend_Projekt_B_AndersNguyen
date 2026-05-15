@@ -1,0 +1,160 @@
+@page
+@model AppRazor.Pages.EditFriendModel
+
+@{
+    ViewData["Title"] = "Edit Friend";
+}
+
+<div class="container px-4 py-4" id="edit-friend">
+    <form class="needs-validation" method="post" novalidate>
+
+        <h2 class="pb-2 border-bottom">
+            @Model.PageHeader
+            <button class="btn btn-primary btn-sm" type="submit" asp-page-handler="Save">Save</button>
+            <a href="~/Overview" class="btn btn-secondary btn-sm">Cancel</a>
+        </h2>
+
+        <input asp-for="FriendInput.FriendId" type="hidden" />
+        <input asp-for="FriendInput.Email" type="hidden" />
+        <input asp-for="FriendInput.Address.AddressId" type="hidden" />
+
+        <input asp-for="SelectedPetId" type="hidden" data-seido-selected-item-id-target />
+        <input asp-for="SelectedQuoteId" type="hidden" data-seido-selected-item-id-target />
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="row g-3 py-4">
+            <h3>Friend</h3>
+
+            <div class="col-sm-6">
+                <label asp-for="FriendInput.FirstName" class="form-label">First Name</label>
+                <input asp-for="FriendInput.FirstName" class="form-control" />
+                <span asp-validation-for="FriendInput.FirstName" class="invalid-feedback"></span>
+            </div>
+
+            <div class="col-sm-6">
+                <label asp-for="FriendInput.LastName" class="form-label">Last Name</label>
+                <input asp-for="FriendInput.LastName" class="form-control" />
+                <span asp-validation-for="FriendInput.LastName" class="invalid-feedback"></span>
+            </div>
+
+            <div class="col-sm-6">
+                <label asp-for="FriendInput.Birthday" class="form-label">Birthday</label>
+                <input asp-for="FriendInput.Birthday" type="date" class="form-control" />
+                <span asp-validation-for="FriendInput.Birthday" class="invalid-feedback"></span>
+            </div>
+
+            <h3 class="pt-4">Address</h3>
+
+            <div class="col-sm-6">
+                <label asp-for="FriendInput.Address.StreetAddress" class="form-label">Street Address</label>
+                <input asp-for="FriendInput.Address.StreetAddress" class="form-control" />
+                <span asp-validation-for="FriendInput.Address.StreetAddress" class="invalid-feedback"></span>
+            </div>
+
+            <div class="col-sm-6">
+                <label asp-for="FriendInput.Address.ZipCode" class="form-label">Zip Code</label>
+                <input asp-for="FriendInput.Address.ZipCode" class="form-control" />
+                <span asp-validation-for="FriendInput.Address.ZipCode" class="invalid-feedback"></span>
+            </div>
+
+            <div class="col-sm-6">
+                <label asp-for="FriendInput.Address.City" class="form-label">City</label>
+                <input asp-for="FriendInput.Address.City" class="form-control" />
+                <span asp-validation-for="FriendInput.Address.City" class="invalid-feedback"></span>
+            </div>
+
+            <div class="col-sm-6">
+                <label asp-for="FriendInput.Address.Country" class="form-label">Country</label>
+                <input asp-for="FriendInput.Address.Country" class="form-control" />
+                <span asp-validation-for="FriendInput.Address.Country" class="invalid-feedback"></span>
+            </div>
+        </div>
+
+        <h3 class="pb-2">Pets</h3>
+
+        @for (int i = 0; i < Model.FriendInput.Pets.Count; i++)
+        {
+            <input asp-for="FriendInput.Pets[i].PetId" type="hidden" />
+
+            <div class="row mb-2 text-center">
+                <div class="col-md-5 themed-grid-col">@Model.FriendInput.Pets[i].Name</div>
+                <div class="col-md-5 themed-grid-col">@Model.FriendInput.Pets[i].Kind</div>
+                <div class="col-md-2 themed-grid-col">
+                    <button type="button"
+                            class="btn btn-danger btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deletePetModal"
+                            data-seido-modal-body="@Model.FriendInput.Pets[i].Name is about to be deleted."
+                            data-seido-selected-item-id="@Model.FriendInput.Pets[i].PetId">
+                        Del
+                    </button>
+                </div>
+            </div>
+        }
+
+        <h3 class="pb-2 mt-4">Quotes</h3>
+
+        @for (int i = 0; i < Model.FriendInput.Quotes.Count; i++)
+        {
+            <input asp-for="FriendInput.Quotes[i].QuoteId" type="hidden" />
+
+            <div class="row mb-2 text-center">
+                <div class="col-md-8 themed-grid-col">@Model.FriendInput.Quotes[i].QuoteText</div>
+                <div class="col-md-2 themed-grid-col">@Model.FriendInput.Quotes[i].Author</div>
+                <div class="col-md-2 themed-grid-col">
+                    <button type="button"
+                            class="btn btn-danger btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteQuoteModal"
+                            data-seido-modal-body="The quote is about to be deleted."
+                            data-seido-selected-item-id="@Model.FriendInput.Quotes[i].QuoteId">
+                        Del
+                    </button>
+                </div>
+            </div>
+        }
+
+        <button class="btn btn-primary btn-lg my-4" type="submit" asp-page-handler="Save">
+            Save Friend
+        </button>
+
+        <div class="modal fade" id="deletePetModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-danger">Confirm deletion</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">Hello from modal</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" asp-page-handler="DeletePet" formnovalidate class="btn btn-danger">Ok</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="deleteQuoteModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-danger">Confirm deletion</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">Hello from modal</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" asp-page-handler="DeleteQuote" formnovalidate class="btn btn-danger">Ok</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+@section script
+{
+    <partial name="_ValidationScriptsPartial" />
+}

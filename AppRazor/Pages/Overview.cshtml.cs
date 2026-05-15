@@ -19,7 +19,7 @@ public class OverviewModel : PageModel
     public List<IFriend>? SelfCreateFriends { get; set; }
 
     [BindProperty]
-    public string? Filter { get; set; }
+    public string? filter { get; set; }
 
     public int PageSize { get; set; } = 10;
     public int ThisPageNr { get; set; }
@@ -34,19 +34,19 @@ public class OverviewModel : PageModel
             ThisPageNr = pageNr;
         }
 
-        Filter = Request.Query["search"];
+        filter = Request.Query["search"];
 
         var seededFriends = await _friendsService.ReadFriendsAsync(
             seeded: true,
             flat: false,
-            filter: Filter,
+            filter: filter,
             pageNumber: ThisPageNr,
             pageSize: PageSize);
 
         var unSeededFriends = await _friendsService.ReadFriendsAsync(
             seeded: false,
             flat: false,
-            filter: Filter,
+            filter: filter,
             pageNumber: ThisPageNr,
             pageSize: PageSize);
 
@@ -60,8 +60,8 @@ public class OverviewModel : PageModel
 
     public async Task<IActionResult> OnPostSearch()
     {
-        var seededFriends = await _friendsService.ReadFriendsAsync(true, false, Filter, ThisPageNr, PageSize);
-        var unSeededFriends = await _friendsService.ReadFriendsAsync(false, false, Filter, ThisPageNr, PageSize);
+        var seededFriends = await _friendsService.ReadFriendsAsync(true, false, filter, ThisPageNr, PageSize);
+        var unSeededFriends = await _friendsService.ReadFriendsAsync(false, false, filter, ThisPageNr, PageSize);
 
         Friends = seededFriends.PageItems;
         SelfCreateFriends = unSeededFriends.PageItems;
@@ -79,11 +79,11 @@ public class OverviewModel : PageModel
         var seededFriends = await _friendsService.ReadFriendsAsync(
             true,
             false,
-            Filter,
+            filter,
             ThisPageNr,
             PageSize);
 
-        var unSeededFriends = await _friendsService.ReadFriendsAsync(false, false, Filter, ThisPageNr, PageSize);
+        var unSeededFriends = await _friendsService.ReadFriendsAsync(false, false, filter, ThisPageNr, PageSize);
         SelfCreateFriends = unSeededFriends.PageItems;
 
         Friends = seededFriends.PageItems;
@@ -101,11 +101,11 @@ public class OverviewModel : PageModel
         var seededFriends = await _friendsService.ReadFriendsAsync(
             true,
             false,
-            Filter,
+            filter,
             ThisPageNr,
             PageSize);
 
-        var unSeededFriends = await _friendsService.ReadFriendsAsync(false, false, Filter, ThisPageNr, PageSize);
+        var unSeededFriends = await _friendsService.ReadFriendsAsync(false, false, filter, ThisPageNr, PageSize);
         SelfCreateFriends = unSeededFriends.PageItems;
 
         Friends = seededFriends.PageItems;
@@ -123,11 +123,11 @@ public class OverviewModel : PageModel
         var seededFriends = await _friendsService.ReadFriendsAsync(
             true,
             false,
-            Filter,
+            filter,
             ThisPageNr,
             PageSize);
 
-        var unSeededFriends = await _friendsService.ReadFriendsAsync(false, false, Filter, ThisPageNr, PageSize);
+        var unSeededFriends = await _friendsService.ReadFriendsAsync(false, false, filter, ThisPageNr, PageSize);
         SelfCreateFriends = unSeededFriends.PageItems;
 
         Friends = seededFriends.PageItems;

@@ -1,0 +1,71 @@
+@page
+@model AppRazor.Pages.DetailedFriendModel
+@{
+    ViewData["Title"] = "Detailed view of friend";
+}
+<div class="container px-4 py-4" id="view-item">
+    <h2 class="pb-2 border-bottom">
+        View details of friend
+    </h2>
+    <div class="row row-cols-1 row-cols-lg-4 align-items-stretch g-4 py-5">
+        <div class="col-md-7 col-lg-10">
+            <form>
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <label class="form-label">Friend's Name</label>
+                        <input type="text" class="form-control" value="@Model.Friend?.FirstName @Model.Friend?.LastName"
+                               readonly>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="form-label">Country</label>
+                        <input type="text" class="form-control" value="@Model.Friend?.Address?.Country" readonly>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="form-label">City</label>
+                        <input type="text" class="form-control" value="@Model.Friend?.Address?.City" readonly>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="form-label">Address</label>
+                        <input type="text" class="form-control" id="address"value="@Model.Friend.Address.StreetAddress" readonly>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="form-label">Birthday</label>
+                        <input type="text" class="form-control" id="birthday"value="@Model.Friend.Birthday?.ToString("yyyy-MM-dd")" readonly>
+                    </div>
+                </div>
+
+                <div class="row g-1">
+                    <h3 class="pb-2">Favorite Quotes</h3>
+
+                    <div class="row mb-2 text-center">
+                    </div>
+                    @foreach (var item in Model.Friend.Quotes)
+                    {
+                        <div class="row mb-4 text-center" id="quotesRow">
+                            <div class="col-md-12 themed-grid-col">
+                                <p>"@item.QuoteText"</p>
+                                - @item.Author <i class="bi bi-chat-quote-fill ms-1"></i>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+
+                <div class="row g-1 mt-4">
+                    <h3 class="pb-2">Pets</h3>
+                    <div class="row mb-2 text-center">
+                        <div class="col-md-6 themed-grid-head-col">Name</div>
+                        <div class="col-md-6 themed-grid-head-col">Kind</div>
+                    </div>
+                    @foreach (var pet in Model.Friend?.Pets)
+                    {
+                        <div class="row mb-2 text-center">
+                            <div class="col-md-6 themed-grid-col">@pet.Name</div>
+                            <div class="col-md-6 themed-grid-col">@pet.Kind</div>
+                        </div>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
