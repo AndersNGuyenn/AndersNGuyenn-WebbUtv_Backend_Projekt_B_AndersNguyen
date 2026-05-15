@@ -10,19 +10,21 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
-
 builder.Configuration.AddSecrets(builder.Environment);
-
 builder.Services.AddEncryptions(builder.Configuration);
 builder.Services.AddDatabaseConnections(builder.Configuration);
 builder.Services.AddUserBasedDbContext();
-
 builder.Services.AddVersionInfo();
 builder.Services.AddEnvironmentInfo();
 
+
+
 builder.Services.AddScoped<AdminDbRepos>();
+builder.Services.AddScoped<FriendsDbRepos>();
+
 
 builder.Services.AddScoped<IAdminService, AdminServiceDb>();
+builder.Services.AddScoped<IFriendsService, FriendsServiceDb>();
 
 var app = builder.Build();
 

@@ -1,0 +1,90 @@
+@page
+@model AppRazor.Pages.OverviewModel
+
+@{
+    ViewData["Title"] = "Overview of Friends";
+}
+
+<head>
+    <link href="~/css/bootstrap/overview.css" rel="stylesheet">
+</head>
+  
+<div class="container px-4 py-4" id="list-of-friends">
+    <h2 class="pb-2 border-bottom">List of Friends</h2>
+    <p>Below are the friends from the database.</p>
+    <form id="friendForm" method="post" class="needs-validation" novalidate>
+        <div class="d-flex gap-2 mb-4">
+            <input asp-for="Filter" class="form-control" type="search" placeholder="Search friend, city or country" />
+            <button asp-page-handler="Search" class="btn btn-outline-success" type="submit">
+                Search
+            </button>
+        </div>
+        <input type="hidden" name="friendId" data-seido-selected-item-id-target />
+        <div class="row mb-2 text-center fw-bold">
+            <div class="col-md-4 themed-grid-head-col">
+                <button type="submit" asp-page-handler="SortName" class="header-button">Friend</button>
+            </div>
+            <div class="col-md-3 themed-grid-head-col">
+                <button type="submit" asp-page-handler="SortCity" class="header-button">City</button>
+            </div>
+            <div class="col-md-2 themed-grid-head-col">
+                <button type="submit" asp-page-handler="SortPets" class="header-button">Pets</button>
+            </div>
+            <div class="col-md-3 themed-grid-head-col">
+                <a href="~/EditFriend" class="btn btn-success btn-sm">New</a>
+            </div>
+        </div>
+        @if (Model.Friends is not null)
+        {
+            foreach (var friend in Model.Friends)
+            {
+                <div class="row mb-2 text-center align-items-center">
+                    <div class="col-md-4">
+                        <a href="~/ViewFriend?id=@friend.FriendId">
+                            @friend.FirstName @friend.LastName
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        @(friend.Address?.City ?? "No address")
+                    </div>
+                    <div class="col-md-2">
+                        @friend.Pets.Count()
+                    </div>
+                    <div class="col-md-3">
+                        <a href="~/EditFriend?id=@friend.FriendId" class="btn btn-secondary btn-sm">
+                            Edit
+                        </a>
+                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#delModal"
+                                data-seido-modal-body="@friend.FirstName @friend.LastName is about to be deleted."
+                                data-seido-selected-item-id="@friend.FriendId">
+                            Del
+                        </button>
+                    </div>
+                </div>
+            }
+        }
+
+        <nav>
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link" href="~/Overview?pagenr=@Model.PrevPageNr&search=@Model.Filter">
+                        Previous
+                    </a>
+                </li>
+
+                @for (int i = 0; i < Model.NrVisiblePages; i++)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="~/Overview?pagenr=@i&search=@Model.Filter">
+                            @(i + 1)
+                        </a>
+                    </li>
+                }
+                <li class="page-item">
+                    <a class="page-link" href="~/Overview?pagenr=@Model.NextPageNr&search=@Model.Filter">Next
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </form>
+</div>
